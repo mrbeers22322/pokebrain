@@ -19,6 +19,7 @@ fun ManualPokemonEntryForm(
     onAddPokemon: (
         species: String,
         cp: Int,
+        level: Double?,
         attackIv: Int?,
         defenseIv: Int?,
         staminaIv: Int?
@@ -30,6 +31,10 @@ fun ManualPokemonEntryForm(
     }
 
     val cpInput = remember {
+        mutableStateOf("")
+    }
+
+    val levelInput = remember {
         mutableStateOf("")
     }
 
@@ -70,6 +75,22 @@ fun ManualPokemonEntryForm(
         },
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Number
+        ),
+        modifier = Modifier.fillMaxWidth()
+    )
+
+    Spacer(modifier = Modifier.height(8.dp))
+
+    OutlinedTextField(
+        value = levelInput.value,
+        onValueChange = {
+            levelInput.value = it
+        },
+        label = {
+            Text("Level optional")
+        },
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Decimal
         ),
         modifier = Modifier.fillMaxWidth()
     )
@@ -128,6 +149,7 @@ fun ManualPokemonEntryForm(
         onClick = {
             val enteredSpecies = speciesInput.value.trim()
             val enteredCp = cpInput.value.toIntOrNull()
+            val enteredLevel = levelInput.value.toDoubleOrNull()
 
             val enteredAttackIv = attackIvInput.value.toIntOrNull()
             val enteredDefenseIv = defenseIvInput.value.toIntOrNull()
@@ -140,6 +162,16 @@ fun ManualPokemonEntryForm(
 
             if (enteredCp == null) {
                 onStatusMessageChange("CP must be a number.")
+                return@Button
+            }
+
+            if (levelInput.value.isNotBlank() && enteredLevel == null) {
+                onStatusMessageChange("Level must be a number.")
+                return@Button
+            }
+
+            if (enteredLevel != null && enteredLevel !in 1.0..51.0) {
+                onStatusMessageChange("Level must be from 1 to 51.")
                 return@Button
             }
 
@@ -176,6 +208,7 @@ fun ManualPokemonEntryForm(
             onAddPokemon(
                 enteredSpecies,
                 enteredCp,
+                enteredLevel,
                 enteredAttackIv,
                 enteredDefenseIv,
                 enteredStaminaIv
@@ -183,6 +216,7 @@ fun ManualPokemonEntryForm(
 
             speciesInput.value = ""
             cpInput.value = ""
+            levelInput.value = ""
             attackIvInput.value = ""
             defenseIvInput.value = ""
             staminaIvInput.value = ""
