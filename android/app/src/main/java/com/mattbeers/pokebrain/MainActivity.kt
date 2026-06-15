@@ -29,6 +29,7 @@ import com.mattbeers.pokebrain.ui.components.PokemonRow
 import com.mattbeers.pokebrain.ui.components.PokemonStatsSummary
 import com.mattbeers.pokebrain.ui.components.SelectedPokemonDetails
 import com.mattbeers.pokebrain.ui.theme.PokeBrainTheme
+import com.mattbeers.pokebrain.ui.components.ManualPokemonEntryForm
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,14 +57,6 @@ fun PokeBrainScreen(modifier: Modifier = Modifier) {
 
     val selectedPokemon = remember {
         mutableStateOf<PokemonObservation?>(null)
-    }
-
-    val speciesInput = remember {
-        mutableStateOf("")
-    }
-
-    val cpInput = remember {
-        mutableStateOf("")
     }
 
     val searchInput = remember {
@@ -184,49 +177,8 @@ fun PokeBrainScreen(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("Manual Entry")
-
-        OutlinedTextField(
-            value = speciesInput.value,
-            onValueChange = {
-                speciesInput.value = it
-            },
-            label = {
-                Text("Species")
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedTextField(
-            value = cpInput.value,
-            onValueChange = {
-                cpInput.value = it
-            },
-            label = {
-                Text("CP")
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Button(
-            onClick = {
-                val enteredSpecies = speciesInput.value.trim()
-                val enteredCp = cpInput.value.toIntOrNull()
-
-                if (enteredSpecies.isBlank()) {
-                    statusMessage.value = "Species cannot be blank."
-                    return@Button
-                }
-
-                if (enteredCp == null) {
-                    statusMessage.value = "CP must be a number."
-                    return@Button
-                }
-
+        ManualPokemonEntryForm(
+            onAddPokemon = { enteredSpecies, enteredCp ->
                 val newPokemon = PokemonObservation(
                     pokemonUuid = "${enteredSpecies.lowercase()}-${pokemonList.size + 1}",
                     species = enteredSpecies,
@@ -236,14 +188,12 @@ fun PokeBrainScreen(modifier: Modifier = Modifier) {
                 pokemonList.add(newPokemon)
                 selectedPokemon.value = newPokemon
 
-                speciesInput.value = ""
-                cpInput.value = ""
-
                 statusMessage.value = "Added $enteredSpecies with CP $enteredCp."
+            },
+            onStatusMessageChange = { message ->
+                statusMessage.value = message
             }
-        ) {
-            Text("Add Manual Pokémon")
-        }
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
