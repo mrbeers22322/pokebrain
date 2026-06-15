@@ -27,6 +27,7 @@ import com.mattbeers.pokebrain.model.PokemonObservation
 import com.mattbeers.pokebrain.repository.PokemonRepository
 import com.mattbeers.pokebrain.ui.theme.PokeBrainTheme
 import com.mattbeers.pokebrain.ui.components.PokemonRow
+import com.mattbeers.pokebrain.ui.components.PokemonStatsSummary
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,62 +101,16 @@ fun PokeBrainScreen(modifier: Modifier = Modifier) {
         searchedPokemonList
     }
 
-    val totalCp = pokemonList.sumOf { pokemon ->
-        pokemon.cp ?: 0
-    }
-
-    val averageCp = if (pokemonList.isNotEmpty()) {
-        totalCp / pokemonList.size
-    } else {
-        0
-    }
-
-    val highestCpPokemon = pokemonList.maxByOrNull { pokemon ->
-        pokemon.cp ?: 0
-    }
-
-    val shinyCount = pokemonList.count { pokemon ->
-        pokemon.shiny
-    }
-
-    val luckyCount = pokemonList.count { pokemon ->
-        pokemon.lucky
-    }
-
-    val shadowCount = pokemonList.count { pokemon ->
-        pokemon.shadow
-    }
-
-    val legendaryCount = pokemonList.count { pokemon ->
-        pokemon.legendary
-    }
-
-    val buddyCount = pokemonList.count { pokemon ->
-        pokemon.buddy
-    }
-
     Column(
         modifier = modifier
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
         Text("PokeBrain")
-        Text("Pokemon Count : ${pokemonList.size}")
-        Text("Total CP : $totalCp")
-        Text("Average CP : $averageCp")
 
-        highestCpPokemon?.let { pokemon ->
-            Text("Highest CP : ${pokemon.species} ${pokemon.cp}")
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text("Tag Stats")
-        Text("Shiny : $shinyCount")
-        Text("Lucky : $luckyCount")
-        Text("Shadow : $shadowCount")
-        Text("Legendary : $legendaryCount")
-        Text("Buddy : $buddyCount")
+        PokemonStatsSummary(
+            pokemonList = pokemonList
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
