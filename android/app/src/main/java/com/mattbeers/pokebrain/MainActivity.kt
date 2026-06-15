@@ -4,18 +4,22 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,6 +52,10 @@ fun Greeting(modifier: Modifier = Modifier) {
         }
     }
 
+    val selectedPokemon = remember {
+        mutableStateOf<PokemonObservation?>(null)
+    }
+
     Column(
         modifier = modifier
             .padding(16.dp)
@@ -58,21 +66,34 @@ fun Greeting(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        selectedPokemon.value?.let { pokemon ->
+            Text("Selected Pokémon")
+            Text("Species : ${pokemon.species}")
+            Text("CP : ${pokemon.cp}")
+            Text("Level : ${pokemon.level}")
+            Text("IVs : ${pokemon.attackIv}/${pokemon.defenseIv}/${pokemon.staminaIv}")
+
+            Spacer(modifier = Modifier.height(16.dp))
+        } ?: Text("Tap a Pokémon to view details")
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         Button(
             onClick = {
-                pokemonList.add(
-                    PokemonObservation(
-                        pokemonUuid = "dialga-test-${pokemonList.size + 1}",
-                        species = "Dialga",
-                        cp = 2988,
-                        level = 25.0,
-                        attackIv = 13,
-                        defenseIv = 15,
-                        staminaIv = 8,
-                        shadow = true,
-                        legendary = true
-                    )
+                val newPokemon = PokemonObservation(
+                    pokemonUuid = "dialga-test-${pokemonList.size + 1}",
+                    species = "Dialga",
+                    cp = 2988,
+                    level = 25.0,
+                    attackIv = 13,
+                    defenseIv = 15,
+                    staminaIv = 8,
+                    shadow = true,
+                    legendary = true
                 )
+
+                pokemonList.add(newPokemon)
+                selectedPokemon.value = newPokemon
             }
         ) {
             Text("Add Test Pokémon")
@@ -81,10 +102,49 @@ fun Greeting(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(16.dp))
 
         pokemonList.forEach { pokemon ->
+            PokemonRow(
+                pokemon = pokemon,
+                onClick = {
+                    selectedPokemon.value = pokemon
+                }
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+        }
+    }
+}
+
+@Composable
+fun PokemonRow(
+    pokemon: PokemonObservation,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                onClick()
+            }
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp)
+        ) {
             Text("${pokemon.species}  CP ${pokemon.cp}")
             Text("Level ${pokemon.level}  IVs ${pokemon.attackIv}/${pokemon.defenseIv}/${pokemon.staminaIv}")
 
-            Spacer(modifier = Modifier.height(12.dp))
+            val tags = listOfNotNull(
+                if (pokemon.shiny) "Shiny" else null,
+                if (pokemon.shadow) "Shadow" else null,
+                if (pokemon.purified) "Purified" else null,
+                if (pokemon.lucky) "Lucky" else null,
+                if (pokemon.legendary) "Legendary" else null,
+                if (pokemon.mythical) "Mythical" else null,
+                if (pokemon.buddy) "Buddy" else null
+            ).joinToString(" • ")
+
+            if (tags.isNotBlank()) {
+                Text("Tags : $tags")
+            }
         }
     }
 }
