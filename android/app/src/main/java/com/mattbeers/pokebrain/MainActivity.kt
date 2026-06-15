@@ -86,6 +86,18 @@ fun Greeting(modifier: Modifier = Modifier) {
             Text("Level : ${pokemon.level}")
             Text("IVs : ${pokemon.attackIv}/${pokemon.defenseIv}/${pokemon.staminaIv}")
 
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(
+                onClick = {
+                    pokemonList.remove(pokemon)
+                    selectedPokemon.value = null
+                    statusMessage.value = "Deleted ${pokemon.species}."
+                }
+            ) {
+                Text("Delete Selected Pokémon")
+            }
+
             Spacer(modifier = Modifier.height(16.dp))
         } ?: Text("Tap a Pokémon to view details")
 
