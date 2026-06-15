@@ -33,9 +33,12 @@ fun PokemonExportPreview(
         mutableStateOf("")
     }
 
+    val showCsvPreview = remember {
+        mutableStateOf(false)
+    }
+
     Text("Export Preview")
     Text("Rows ready : ${exportRows.size}")
-    Text("Showing newest ${previewRows.size} rows")
     Text("CSV characters : ${fullCsvText.length}")
 
     Spacer(modifier = Modifier.height(8.dp))
@@ -79,20 +82,42 @@ fun PokemonExportPreview(
         Text("Share CSV")
     }
 
+    Spacer(modifier = Modifier.height(8.dp))
+
+    Button(
+        onClick = {
+            showCsvPreview.value = !showCsvPreview.value
+        }
+    ) {
+        Text(
+            if (showCsvPreview.value) {
+                "Hide CSV Preview"
+            } else {
+                "Show CSV Preview"
+            }
+        )
+    }
+
     if (copyStatusMessage.value.isNotBlank()) {
         Spacer(modifier = Modifier.height(8.dp))
         Text(copyStatusMessage.value)
     }
 
-    Spacer(modifier = Modifier.height(8.dp))
+    if (showCsvPreview.value) {
+        Spacer(modifier = Modifier.height(8.dp))
 
-    Text(pokemonExportCsvHeader())
-
-    Spacer(modifier = Modifier.height(8.dp))
-
-    previewRows.forEach { exportRow ->
-        Text(exportRow.toCsvLine())
+        Text("Showing newest ${previewRows.size} rows")
 
         Spacer(modifier = Modifier.height(8.dp))
+
+        Text(pokemonExportCsvHeader())
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        previewRows.forEach { exportRow ->
+            Text(exportRow.toCsvLine())
+
+            Spacer(modifier = Modifier.height(8.dp))
+        }
     }
 }
