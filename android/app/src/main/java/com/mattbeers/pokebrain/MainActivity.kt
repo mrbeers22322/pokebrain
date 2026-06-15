@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             PokeBrainTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
+                    PokeBrainScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(modifier: Modifier = Modifier) {
+fun PokeBrainScreen(modifier: Modifier = Modifier) {
     val pokemonList = remember {
         mutableStateListOf<PokemonObservation>().apply {
             addAll(PokemonRepository.pokemonList)
@@ -472,6 +472,6 @@ fun PokemonRow(
 @Composable
 fun GreetingPreview() {
     PokeBrainTheme {
-        Greeting()
+        PokeBrainScreen()
     }
 }
