@@ -36,6 +36,8 @@ fun ManualPokemonEntryForm(
     ) -> Unit,
     onStatusMessageChange: (message: String) -> Unit
 ) {
+    val isExpanded = remember { mutableStateOf(false) }
+
     val speciesInput = remember { mutableStateOf("") }
     val nicknameInput = remember { mutableStateOf("") }
     val cpInput = remember { mutableStateOf("") }
@@ -54,271 +56,291 @@ fun ManualPokemonEntryForm(
 
     Text("Manual Entry")
 
-    OutlinedTextField(
-        value = speciesInput.value,
-        onValueChange = {
-            speciesInput.value = it
-        },
-        label = {
-            Text("Species")
-        },
-        modifier = Modifier.fillMaxWidth()
-    )
-
-    Spacer(modifier = Modifier.height(8.dp))
-
-    OutlinedTextField(
-        value = nicknameInput.value,
-        onValueChange = {
-            nicknameInput.value = it
-        },
-        label = {
-            Text("Nickname optional")
-        },
-        modifier = Modifier.fillMaxWidth()
-    )
-
-    Spacer(modifier = Modifier.height(8.dp))
-
-    OutlinedTextField(
-        value = cpInput.value,
-        onValueChange = {
-            cpInput.value = it
-        },
-        label = {
-            Text("CP")
-        },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Number
-        ),
-        modifier = Modifier.fillMaxWidth()
-    )
-
-    Spacer(modifier = Modifier.height(8.dp))
-
-    OutlinedTextField(
-        value = levelInput.value,
-        onValueChange = {
-            levelInput.value = it
-        },
-        label = {
-            Text("Level optional")
-        },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Decimal
-        ),
-        modifier = Modifier.fillMaxWidth()
-    )
-
-    Spacer(modifier = Modifier.height(8.dp))
-
-    OutlinedTextField(
-        value = attackIvInput.value,
-        onValueChange = {
-            attackIvInput.value = it
-        },
-        label = {
-            Text("Attack IV optional")
-        },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Number
-        ),
-        modifier = Modifier.fillMaxWidth()
-    )
-
-    Spacer(modifier = Modifier.height(8.dp))
-
-    OutlinedTextField(
-        value = defenseIvInput.value,
-        onValueChange = {
-            defenseIvInput.value = it
-        },
-        label = {
-            Text("Defense IV optional")
-        },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Number
-        ),
-        modifier = Modifier.fillMaxWidth()
-    )
-
-    Spacer(modifier = Modifier.height(8.dp))
-
-    OutlinedTextField(
-        value = staminaIvInput.value,
-        onValueChange = {
-            staminaIvInput.value = it
-        },
-        label = {
-            Text("Stamina IV optional")
-        },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Number
-        ),
-        modifier = Modifier.fillMaxWidth()
-    )
-
-    Spacer(modifier = Modifier.height(8.dp))
-
-    Text("Tags")
-
-    TagCheckbox(
-        label = "Shiny",
-        checked = shinyInput.value,
-        onCheckedChange = {
-            shinyInput.value = it
-        }
-    )
-
-    TagCheckbox(
-        label = "Shadow",
-        checked = shadowInput.value,
-        onCheckedChange = {
-            shadowInput.value = it
-        }
-    )
-
-    TagCheckbox(
-        label = "Purified",
-        checked = purifiedInput.value,
-        onCheckedChange = {
-            purifiedInput.value = it
-        }
-    )
-
-    TagCheckbox(
-        label = "Lucky",
-        checked = luckyInput.value,
-        onCheckedChange = {
-            luckyInput.value = it
-        }
-    )
-
-    TagCheckbox(
-        label = "Legendary",
-        checked = legendaryInput.value,
-        onCheckedChange = {
-            legendaryInput.value = it
-        }
-    )
-
-    TagCheckbox(
-        label = "Mythical",
-        checked = mythicalInput.value,
-        onCheckedChange = {
-            mythicalInput.value = it
-        }
-    )
-
-    TagCheckbox(
-        label = "Buddy",
-        checked = buddyInput.value,
-        onCheckedChange = {
-            buddyInput.value = it
-        }
-    )
-
-    Spacer(modifier = Modifier.height(8.dp))
-
     Button(
         onClick = {
-            val enteredSpecies = speciesInput.value.trim()
-            val enteredNickname = nicknameInput.value.trim().ifBlank {
-                null
-            }
-
-            val enteredCp = cpInput.value.toIntOrNull()
-            val enteredLevel = levelInput.value.toDoubleOrNull()
-
-            val enteredAttackIv = attackIvInput.value.toIntOrNull()
-            val enteredDefenseIv = defenseIvInput.value.toIntOrNull()
-            val enteredStaminaIv = staminaIvInput.value.toIntOrNull()
-
-            if (enteredSpecies.isBlank()) {
-                onStatusMessageChange("Species cannot be blank.")
-                return@Button
-            }
-
-            if (enteredCp == null) {
-                onStatusMessageChange("CP must be a number.")
-                return@Button
-            }
-
-            if (levelInput.value.isNotBlank() && enteredLevel == null) {
-                onStatusMessageChange("Level must be a number.")
-                return@Button
-            }
-
-            if (enteredLevel != null && enteredLevel !in 1.0..51.0) {
-                onStatusMessageChange("Level must be from 1 to 51.")
-                return@Button
-            }
-
-            if (attackIvInput.value.isNotBlank() && enteredAttackIv == null) {
-                onStatusMessageChange("Attack IV must be a number from 0 to 15.")
-                return@Button
-            }
-
-            if (defenseIvInput.value.isNotBlank() && enteredDefenseIv == null) {
-                onStatusMessageChange("Defense IV must be a number from 0 to 15.")
-                return@Button
-            }
-
-            if (staminaIvInput.value.isNotBlank() && enteredStaminaIv == null) {
-                onStatusMessageChange("Stamina IV must be a number from 0 to 15.")
-                return@Button
-            }
-
-            if (enteredAttackIv != null && enteredAttackIv !in 0..15) {
-                onStatusMessageChange("Attack IV must be from 0 to 15.")
-                return@Button
-            }
-
-            if (enteredDefenseIv != null && enteredDefenseIv !in 0..15) {
-                onStatusMessageChange("Defense IV must be from 0 to 15.")
-                return@Button
-            }
-
-            if (enteredStaminaIv != null && enteredStaminaIv !in 0..15) {
-                onStatusMessageChange("Stamina IV must be from 0 to 15.")
-                return@Button
-            }
-
-            onAddPokemon(
-                enteredNickname,
-                enteredSpecies,
-                enteredCp,
-                enteredLevel,
-                enteredAttackIv,
-                enteredDefenseIv,
-                enteredStaminaIv,
-                shinyInput.value,
-                shadowInput.value,
-                purifiedInput.value,
-                luckyInput.value,
-                legendaryInput.value,
-                mythicalInput.value,
-                buddyInput.value
-            )
-
-            speciesInput.value = ""
-            nicknameInput.value = ""
-            cpInput.value = ""
-            levelInput.value = ""
-            attackIvInput.value = ""
-            defenseIvInput.value = ""
-            staminaIvInput.value = ""
-
-            shinyInput.value = false
-            shadowInput.value = false
-            purifiedInput.value = false
-            luckyInput.value = false
-            legendaryInput.value = false
-            mythicalInput.value = false
-            buddyInput.value = false
+            isExpanded.value = !isExpanded.value
         }
     ) {
-        Text("Add Manual Pokémon")
+        Text(
+            if (isExpanded.value) {
+                "Hide Manual Entry"
+            } else {
+                "Show Manual Entry"
+            }
+        )
+    }
+
+    Spacer(modifier = Modifier.height(8.dp))
+
+    if (isExpanded.value) {
+        OutlinedTextField(
+            value = speciesInput.value,
+            onValueChange = {
+                speciesInput.value = it
+            },
+            label = {
+                Text("Species")
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedTextField(
+            value = nicknameInput.value,
+            onValueChange = {
+                nicknameInput.value = it
+            },
+            label = {
+                Text("Nickname optional")
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedTextField(
+            value = cpInput.value,
+            onValueChange = {
+                cpInput.value = it
+            },
+            label = {
+                Text("CP")
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedTextField(
+            value = levelInput.value,
+            onValueChange = {
+                levelInput.value = it
+            },
+            label = {
+                Text("Level optional")
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Decimal
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedTextField(
+            value = attackIvInput.value,
+            onValueChange = {
+                attackIvInput.value = it
+            },
+            label = {
+                Text("Attack IV optional")
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedTextField(
+            value = defenseIvInput.value,
+            onValueChange = {
+                defenseIvInput.value = it
+            },
+            label = {
+                Text("Defense IV optional")
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedTextField(
+            value = staminaIvInput.value,
+            onValueChange = {
+                staminaIvInput.value = it
+            },
+            label = {
+                Text("Stamina IV optional")
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text("Tags")
+
+        TagCheckbox(
+            label = "Shiny",
+            checked = shinyInput.value,
+            onCheckedChange = {
+                shinyInput.value = it
+            }
+        )
+
+        TagCheckbox(
+            label = "Shadow",
+            checked = shadowInput.value,
+            onCheckedChange = {
+                shadowInput.value = it
+            }
+        )
+
+        TagCheckbox(
+            label = "Purified",
+            checked = purifiedInput.value,
+            onCheckedChange = {
+                purifiedInput.value = it
+            }
+        )
+
+        TagCheckbox(
+            label = "Lucky",
+            checked = luckyInput.value,
+            onCheckedChange = {
+                luckyInput.value = it
+            }
+        )
+
+        TagCheckbox(
+            label = "Legendary",
+            checked = legendaryInput.value,
+            onCheckedChange = {
+                legendaryInput.value = it
+            }
+        )
+
+        TagCheckbox(
+            label = "Mythical",
+            checked = mythicalInput.value,
+            onCheckedChange = {
+                mythicalInput.value = it
+            }
+        )
+
+        TagCheckbox(
+            label = "Buddy",
+            checked = buddyInput.value,
+            onCheckedChange = {
+                buddyInput.value = it
+            }
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
+            onClick = {
+                val enteredSpecies = speciesInput.value.trim()
+                val enteredNickname = nicknameInput.value.trim().ifBlank {
+                    null
+                }
+
+                val enteredCp = cpInput.value.toIntOrNull()
+                val enteredLevel = levelInput.value.toDoubleOrNull()
+
+                val enteredAttackIv = attackIvInput.value.toIntOrNull()
+                val enteredDefenseIv = defenseIvInput.value.toIntOrNull()
+                val enteredStaminaIv = staminaIvInput.value.toIntOrNull()
+
+                if (enteredSpecies.isBlank()) {
+                    onStatusMessageChange("Species cannot be blank.")
+                    return@Button
+                }
+
+                if (enteredCp == null) {
+                    onStatusMessageChange("CP must be a number.")
+                    return@Button
+                }
+
+                if (levelInput.value.isNotBlank() && enteredLevel == null) {
+                    onStatusMessageChange("Level must be a number.")
+                    return@Button
+                }
+
+                if (enteredLevel != null && enteredLevel !in 1.0..51.0) {
+                    onStatusMessageChange("Level must be from 1 to 51.")
+                    return@Button
+                }
+
+                if (attackIvInput.value.isNotBlank() && enteredAttackIv == null) {
+                    onStatusMessageChange("Attack IV must be a number from 0 to 15.")
+                    return@Button
+                }
+
+                if (defenseIvInput.value.isNotBlank() && enteredDefenseIv == null) {
+                    onStatusMessageChange("Defense IV must be a number from 0 to 15.")
+                    return@Button
+                }
+
+                if (staminaIvInput.value.isNotBlank() && enteredStaminaIv == null) {
+                    onStatusMessageChange("Stamina IV must be a number from 0 to 15.")
+                    return@Button
+                }
+
+                if (enteredAttackIv != null && enteredAttackIv !in 0..15) {
+                    onStatusMessageChange("Attack IV must be from 0 to 15.")
+                    return@Button
+                }
+
+                if (enteredDefenseIv != null && enteredDefenseIv !in 0..15) {
+                    onStatusMessageChange("Defense IV must be from 0 to 15.")
+                    return@Button
+                }
+
+                if (enteredStaminaIv != null && enteredStaminaIv !in 0..15) {
+                    onStatusMessageChange("Stamina IV must be from 0 to 15.")
+                    return@Button
+                }
+
+                onAddPokemon(
+                    enteredNickname,
+                    enteredSpecies,
+                    enteredCp,
+                    enteredLevel,
+                    enteredAttackIv,
+                    enteredDefenseIv,
+                    enteredStaminaIv,
+                    shinyInput.value,
+                    shadowInput.value,
+                    purifiedInput.value,
+                    luckyInput.value,
+                    legendaryInput.value,
+                    mythicalInput.value,
+                    buddyInput.value
+                )
+
+                speciesInput.value = ""
+                nicknameInput.value = ""
+                cpInput.value = ""
+                levelInput.value = ""
+                attackIvInput.value = ""
+                defenseIvInput.value = ""
+                staminaIvInput.value = ""
+
+                shinyInput.value = false
+                shadowInput.value = false
+                purifiedInput.value = false
+                luckyInput.value = false
+                legendaryInput.value = false
+                mythicalInput.value = false
+                buddyInput.value = false
+
+                isExpanded.value = false
+            }
+        ) {
+            Text("Add Manual Pokémon")
+        }
     }
 }
 
