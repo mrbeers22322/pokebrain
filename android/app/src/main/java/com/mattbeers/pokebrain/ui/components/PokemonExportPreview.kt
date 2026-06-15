@@ -14,11 +14,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.FileProvider
 import com.mattbeers.pokebrain.data.export.pokemonExportCsvHeader
 import com.mattbeers.pokebrain.data.export.toCsvLine
 import com.mattbeers.pokebrain.data.export.toExportRows
 import com.mattbeers.pokebrain.data.export.toPokemonExportCsv
 import com.mattbeers.pokebrain.model.PokemonObservation
+import java.io.File
 
 @Composable
 fun PokemonExportPreview(
@@ -79,7 +81,48 @@ fun PokemonExportPreview(
             )
         }
     ) {
-        Text("Share CSV")
+        Text("Share CSV Text")
+    }
+
+    Spacer(modifier = Modifier.height(8.dp))
+
+    Button(
+        onClick = {
+            val exportFile = File(
+                context.cacheDir,
+                "pokebrain_pokemon_export.csv"
+            )
+
+            exportFile.writeText(fullCsvText)
+
+            val csvUri = FileProvider.getUriForFile(
+                context,
+                "${context.packageName}.fileprovider",
+                exportFile
+            )
+
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/csv"
+                putExtra(Intent.EXTRA_SUBJECT, "PokeBrain Pokemon Export CSV")
+                putExtra(Intent.EXTRA_STREAM, csvUri)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+                clipData = ClipData.newUri(
+                    context.contentResolver,
+                    "PokeBrain Pokemon Export CSV",
+                    csvUri
+                )
+            }
+
+            context.startActivity(
+                Intent.createChooser(
+                    shareIntent,
+                    "Share PokeBrain CSV File"
+                )
+            )
+        }
+    ) {
+        Text("Share CSV File")
     }
 
     Spacer(modifier = Modifier.height(8.dp))
