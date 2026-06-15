@@ -15,6 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -56,6 +57,18 @@ fun Greeting(modifier: Modifier = Modifier) {
         mutableStateOf<PokemonObservation?>(null)
     }
 
+    val speciesInput = remember {
+        mutableStateOf("")
+    }
+
+    val cpInput = remember {
+        mutableStateOf("")
+    }
+
+    val statusMessage = remember {
+        mutableStateOf("Enter a species and CP to add a Pokémon.")
+    }
+
     Column(
         modifier = modifier
             .padding(16.dp)
@@ -78,6 +91,73 @@ fun Greeting(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        Text("Manual Entry")
+
+        OutlinedTextField(
+            value = speciesInput.value,
+            onValueChange = {
+                speciesInput.value = it
+            },
+            label = {
+                Text("Species")
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedTextField(
+            value = cpInput.value,
+            onValueChange = {
+                cpInput.value = it
+            },
+            label = {
+                Text("CP")
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
+            onClick = {
+                val enteredSpecies = speciesInput.value.trim()
+                val enteredCp = cpInput.value.toIntOrNull()
+
+                if (enteredSpecies.isBlank()) {
+                    statusMessage.value = "Species cannot be blank."
+                    return@Button
+                }
+
+                if (enteredCp == null) {
+                    statusMessage.value = "CP must be a number."
+                    return@Button
+                }
+
+                val newPokemon = PokemonObservation(
+                    pokemonUuid = "${enteredSpecies.lowercase()}-${pokemonList.size + 1}",
+                    species = enteredSpecies,
+                    cp = enteredCp
+                )
+
+                pokemonList.add(newPokemon)
+                selectedPokemon.value = newPokemon
+
+                speciesInput.value = ""
+                cpInput.value = ""
+
+                statusMessage.value = "Added $enteredSpecies with CP $enteredCp."
+            }
+        ) {
+            Text("Add Manual Pokémon")
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(statusMessage.value)
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         Button(
             onClick = {
                 val newPokemon = PokemonObservation(
@@ -94,6 +174,7 @@ fun Greeting(modifier: Modifier = Modifier) {
 
                 pokemonList.add(newPokemon)
                 selectedPokemon.value = newPokemon
+                statusMessage.value = "Added test Dialga."
             }
         ) {
             Text("Add Test Pokémon")
