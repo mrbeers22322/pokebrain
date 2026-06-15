@@ -1,10 +1,12 @@
 package com.mattbeers.pokebrain.ui.components
 
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,37 +25,32 @@ fun ManualPokemonEntryForm(
         level: Double?,
         attackIv: Int?,
         defenseIv: Int?,
-        staminaIv: Int?
+        staminaIv: Int?,
+        shiny: Boolean,
+        shadow: Boolean,
+        purified: Boolean,
+        lucky: Boolean,
+        legendary: Boolean,
+        mythical: Boolean,
+        buddy: Boolean
     ) -> Unit,
     onStatusMessageChange: (message: String) -> Unit
 ) {
-    val speciesInput = remember {
-        mutableStateOf("")
-    }
+    val speciesInput = remember { mutableStateOf("") }
+    val nicknameInput = remember { mutableStateOf("") }
+    val cpInput = remember { mutableStateOf("") }
+    val levelInput = remember { mutableStateOf("") }
+    val attackIvInput = remember { mutableStateOf("") }
+    val defenseIvInput = remember { mutableStateOf("") }
+    val staminaIvInput = remember { mutableStateOf("") }
 
-    val nicknameInput = remember {
-        mutableStateOf("")
-    }
-
-    val cpInput = remember {
-        mutableStateOf("")
-    }
-
-    val levelInput = remember {
-        mutableStateOf("")
-    }
-
-    val attackIvInput = remember {
-        mutableStateOf("")
-    }
-
-    val defenseIvInput = remember {
-        mutableStateOf("")
-    }
-
-    val staminaIvInput = remember {
-        mutableStateOf("")
-    }
+    val shinyInput = remember { mutableStateOf(false) }
+    val shadowInput = remember { mutableStateOf(false) }
+    val purifiedInput = remember { mutableStateOf(false) }
+    val luckyInput = remember { mutableStateOf(false) }
+    val legendaryInput = remember { mutableStateOf(false) }
+    val mythicalInput = remember { mutableStateOf(false) }
+    val buddyInput = remember { mutableStateOf(false) }
 
     Text("Manual Entry")
 
@@ -163,12 +160,73 @@ fun ManualPokemonEntryForm(
 
     Spacer(modifier = Modifier.height(8.dp))
 
+    Text("Tags")
+
+    TagCheckbox(
+        label = "Shiny",
+        checked = shinyInput.value,
+        onCheckedChange = {
+            shinyInput.value = it
+        }
+    )
+
+    TagCheckbox(
+        label = "Shadow",
+        checked = shadowInput.value,
+        onCheckedChange = {
+            shadowInput.value = it
+        }
+    )
+
+    TagCheckbox(
+        label = "Purified",
+        checked = purifiedInput.value,
+        onCheckedChange = {
+            purifiedInput.value = it
+        }
+    )
+
+    TagCheckbox(
+        label = "Lucky",
+        checked = luckyInput.value,
+        onCheckedChange = {
+            luckyInput.value = it
+        }
+    )
+
+    TagCheckbox(
+        label = "Legendary",
+        checked = legendaryInput.value,
+        onCheckedChange = {
+            legendaryInput.value = it
+        }
+    )
+
+    TagCheckbox(
+        label = "Mythical",
+        checked = mythicalInput.value,
+        onCheckedChange = {
+            mythicalInput.value = it
+        }
+    )
+
+    TagCheckbox(
+        label = "Buddy",
+        checked = buddyInput.value,
+        onCheckedChange = {
+            buddyInput.value = it
+        }
+    )
+
+    Spacer(modifier = Modifier.height(8.dp))
+
     Button(
         onClick = {
             val enteredSpecies = speciesInput.value.trim()
             val enteredNickname = nicknameInput.value.trim().ifBlank {
                 null
             }
+
             val enteredCp = cpInput.value.toIntOrNull()
             val enteredLevel = levelInput.value.toDoubleOrNull()
 
@@ -233,7 +291,14 @@ fun ManualPokemonEntryForm(
                 enteredLevel,
                 enteredAttackIv,
                 enteredDefenseIv,
-                enteredStaminaIv
+                enteredStaminaIv,
+                shinyInput.value,
+                shadowInput.value,
+                purifiedInput.value,
+                luckyInput.value,
+                legendaryInput.value,
+                mythicalInput.value,
+                buddyInput.value
             )
 
             speciesInput.value = ""
@@ -243,8 +308,32 @@ fun ManualPokemonEntryForm(
             attackIvInput.value = ""
             defenseIvInput.value = ""
             staminaIvInput.value = ""
+
+            shinyInput.value = false
+            shadowInput.value = false
+            purifiedInput.value = false
+            luckyInput.value = false
+            legendaryInput.value = false
+            mythicalInput.value = false
+            buddyInput.value = false
         }
     ) {
         Text("Add Manual Pokémon")
+    }
+}
+
+@Composable
+fun TagCheckbox(
+    label: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    Row {
+        Checkbox(
+            checked = checked,
+            onCheckedChange = onCheckedChange
+        )
+
+        Text(label)
     }
 }
