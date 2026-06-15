@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
 import com.mattbeers.pokebrain.data.export.pokemonExportCsvHeader
 import com.mattbeers.pokebrain.data.export.toCsvLine
 import com.mattbeers.pokebrain.data.export.toExportRows
+import com.mattbeers.pokebrain.data.export.toPokemonExportCsv
 import com.mattbeers.pokebrain.model.PokemonObservation
 
 @Composable
@@ -17,10 +18,12 @@ fun PokemonExportPreview(
 ) {
     val exportRows = pokemonList.toExportRows()
     val previewRows = exportRows.takeLast(5)
+    val fullCsvText = pokemonList.toPokemonExportCsv()
 
     Text("Export Preview")
     Text("Rows ready : ${exportRows.size}")
     Text("Showing newest ${previewRows.size} rows")
+    Text("CSV characters : ${fullCsvText.length}")
 
     Spacer(modifier = Modifier.height(8.dp))
 

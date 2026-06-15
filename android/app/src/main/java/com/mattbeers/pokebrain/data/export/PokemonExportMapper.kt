@@ -31,6 +31,18 @@ fun List<PokemonObservation>.toExportRows(): List<PokemonExportRow> {
     }
 }
 
+fun List<PokemonObservation>.toPokemonExportCsv(): String {
+    val exportRows = toExportRows()
+
+    return buildString {
+        appendLine(pokemonExportCsvHeader())
+
+        exportRows.forEach { exportRow ->
+            appendLine(exportRow.toCsvLine())
+        }
+    }.trimEnd()
+}
+
 fun PokemonExportRow.toCsvLine(): String {
     return listOf(
         pokemonUuid,
@@ -49,7 +61,9 @@ fun PokemonExportRow.toCsvLine(): String {
         legendary,
         mythical,
         buddy
-    ).joinToString(",")
+    ).joinToString(",") { value ->
+        value.toCsvCell()
+    }
 }
 
 fun pokemonExportCsvHeader(): String {
@@ -71,6 +85,22 @@ fun pokemonExportCsvHeader(): String {
         "mythical",
         "buddy"
     ).joinToString(",")
+}
+
+private fun String.toCsvCell(): String {
+    val escapedValue = replace("\"", "\"\"")
+
+    val needsQuotes =
+        contains(",") ||
+                contains("\"") ||
+                contains("\n") ||
+                contains("\r")
+
+    return if (needsQuotes) {
+        "\"$escapedValue\""
+    } else {
+        escapedValue
+    }
 }
 
 private fun Boolean.toExportBoolean(): String {
