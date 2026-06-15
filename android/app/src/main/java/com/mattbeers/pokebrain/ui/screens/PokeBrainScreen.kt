@@ -23,6 +23,7 @@ import com.mattbeers.pokebrain.ui.components.PokemonSearchControls
 import com.mattbeers.pokebrain.ui.components.PokemonStatsSummary
 import com.mattbeers.pokebrain.ui.components.SelectedPokemonDetails
 import com.mattbeers.pokebrain.ui.theme.PokeBrainTheme
+import com.mattbeers.pokebrain.ui.components.PokemonExportPreview
 
 @Composable
 fun PokeBrainScreen(modifier: Modifier = Modifier) {
@@ -80,6 +81,12 @@ fun PokeBrainScreen(modifier: Modifier = Modifier) {
         Text("PokeBrain")
 
         PokemonStatsSummary(
+            pokemonList = pokemonList
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        PokemonExportPreview(
             pokemonList = pokemonList
         )
 
