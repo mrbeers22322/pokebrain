@@ -33,6 +33,9 @@ fun PokemonRow(
             val ivText = formatPokemonIvs(pokemon)
             val ivPercentText = formatPokemonIvPercent(pokemon)
 
+            pokemon.nickname?.let { nickname ->
+                Text(nickname)
+            }
             Text("${pokemon.species}  CP ${pokemon.cp}")
             Text("Level $levelText  IVs $ivText")
             Text("IV % : $ivPercentText")

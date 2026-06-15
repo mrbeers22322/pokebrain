@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ManualPokemonEntryForm(
     onAddPokemon: (
+        nickname: String?,
         species: String,
         cp: Int,
         level: Double?,
@@ -27,6 +28,10 @@ fun ManualPokemonEntryForm(
     onStatusMessageChange: (message: String) -> Unit
 ) {
     val speciesInput = remember {
+        mutableStateOf("")
+    }
+
+    val nicknameInput = remember {
         mutableStateOf("")
     }
 
@@ -59,6 +64,19 @@ fun ManualPokemonEntryForm(
         },
         label = {
             Text("Species")
+        },
+        modifier = Modifier.fillMaxWidth()
+    )
+
+    Spacer(modifier = Modifier.height(8.dp))
+
+    OutlinedTextField(
+        value = nicknameInput.value,
+        onValueChange = {
+            nicknameInput.value = it
+        },
+        label = {
+            Text("Nickname optional")
         },
         modifier = Modifier.fillMaxWidth()
     )
@@ -148,6 +166,9 @@ fun ManualPokemonEntryForm(
     Button(
         onClick = {
             val enteredSpecies = speciesInput.value.trim()
+            val enteredNickname = nicknameInput.value.trim().ifBlank {
+                null
+            }
             val enteredCp = cpInput.value.toIntOrNull()
             val enteredLevel = levelInput.value.toDoubleOrNull()
 
@@ -206,6 +227,7 @@ fun ManualPokemonEntryForm(
             }
 
             onAddPokemon(
+                enteredNickname,
                 enteredSpecies,
                 enteredCp,
                 enteredLevel,
@@ -215,6 +237,7 @@ fun ManualPokemonEntryForm(
             )
 
             speciesInput.value = ""
+            nicknameInput.value = ""
             cpInput.value = ""
             levelInput.value = ""
             attackIvInput.value = ""

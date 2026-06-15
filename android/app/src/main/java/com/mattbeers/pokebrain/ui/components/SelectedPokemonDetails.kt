@@ -29,6 +29,9 @@ fun SelectedPokemonDetails(
     Column {
         Text("Selected Pokémon")
         Text("Species : ${pokemon.species}")
+        pokemon.nickname?.let { nickname ->
+            Text("Nickname : $nickname")
+        }
         Text("CP : ${pokemon.cp}")
         Text("Level : $levelText")
         Text("IVs : $ivText")
