@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -28,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.mattbeers.pokebrain.model.PokemonObservation
 import com.mattbeers.pokebrain.repository.PokemonRepository
 import com.mattbeers.pokebrain.ui.theme.PokeBrainTheme
+import com.mattbeers.pokebrain.ui.components.PokemonRow
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -428,41 +427,6 @@ fun PokeBrainScreen(modifier: Modifier = Modifier) {
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
-            }
-        }
-    }
-}
-
-@Composable
-fun PokemonRow(
-    pokemon: PokemonObservation,
-    onClick: () -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                onClick()
-            }
-    ) {
-        Column(
-            modifier = Modifier.padding(12.dp)
-        ) {
-            Text("${pokemon.species}  CP ${pokemon.cp}")
-            Text("Level ${pokemon.level}  IVs ${pokemon.attackIv}/${pokemon.defenseIv}/${pokemon.staminaIv}")
-
-            val tags = listOfNotNull(
-                if (pokemon.shiny) "Shiny" else null,
-                if (pokemon.shadow) "Shadow" else null,
-                if (pokemon.purified) "Purified" else null,
-                if (pokemon.lucky) "Lucky" else null,
-                if (pokemon.legendary) "Legendary" else null,
-                if (pokemon.mythical) "Mythical" else null,
-                if (pokemon.buddy) "Buddy" else null
-            ).joinToString(" • ")
-
-            if (tags.isNotBlank()) {
-                Text("Tags : $tags")
             }
         }
     }
