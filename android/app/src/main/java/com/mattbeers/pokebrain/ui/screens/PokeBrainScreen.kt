@@ -155,11 +155,14 @@ fun PokeBrainScreen(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(16.dp))
 
         ManualPokemonEntryForm(
-            onAddPokemon = { enteredSpecies, enteredCp ->
+            onAddPokemon = { enteredSpecies, enteredCp, enteredAttackIv, enteredDefenseIv, enteredStaminaIv ->
                 val newPokemon = PokemonObservation(
                     pokemonUuid = "${enteredSpecies.lowercase()}-${pokemonList.size + 1}",
                     species = enteredSpecies,
-                    cp = enteredCp
+                    cp = enteredCp,
+                    attackIv = enteredAttackIv,
+                    defenseIv = enteredDefenseIv,
+                    staminaIv = enteredStaminaIv
                 )
 
                 pokemonList.add(newPokemon)
