@@ -90,6 +90,27 @@ fun Greeting(modifier: Modifier = Modifier) {
 
             Button(
                 onClick = {
+                    val selectedIndex = pokemonList.indexOf(pokemon)
+
+                    if (selectedIndex != -1) {
+                        val currentCp = pokemon.cp ?: 0
+                        val updatedPokemon = pokemon.copy(
+                            cp = currentCp + 50
+                        )
+
+                        pokemonList[selectedIndex] = updatedPokemon
+                        selectedPokemon.value = updatedPokemon
+                        statusMessage.value = "Powered up ${updatedPokemon.species} to CP ${updatedPokemon.cp}."
+                    }
+                }
+            ) {
+                Text("Power Up Selected Pokémon")
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(
+                onClick = {
                     pokemonList.remove(pokemon)
                     selectedPokemon.value = null
                     statusMessage.value = "Deleted ${pokemon.species}."
