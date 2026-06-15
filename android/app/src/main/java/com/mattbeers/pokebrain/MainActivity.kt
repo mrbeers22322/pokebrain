@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.mattbeers.pokebrain.ui.theme.PokeBrainTheme
 import androidx.compose.foundation.layout.Column
+import com.mattbeers.pokebrain.model.PokemonObservation
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,14 +32,28 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(modifier: Modifier = Modifier) {
+
+    val firstPokemon = PokemonObservation(
+        pokemonUuid = "charizard-test-001",
+        species = "Charizard",
+        cp = 3024,
+        level = 43.0,
+        attackIv = 14,
+        defenseIv = 15,
+        staminaIv = 15,
+        buddy = true
+    )
+
+    val pokemonCount = 1
+
     Column(
         modifier = modifier
     ) {
         Text("PokeBrain")
-
-        val pokemonCount = 0
-
         Text("Pokemon Count : $pokemonCount")
+        Text("First Pokemon : ${firstPokemon.species}")
+        Text("CP : ${firstPokemon.cp}")
+        Text("IVs : ${firstPokemon.attackIv}/${firstPokemon.defenseIv}/${firstPokemon.staminaIv}")
     }
 }
 
