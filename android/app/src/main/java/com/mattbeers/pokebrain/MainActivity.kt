@@ -65,6 +65,10 @@ fun Greeting(modifier: Modifier = Modifier) {
         mutableStateOf("")
     }
 
+    val searchInput = remember {
+        mutableStateOf("")
+    }
+
     val statusMessage = remember {
         mutableStateOf("Enter a species and CP to add a Pokémon.")
     }
@@ -76,6 +80,13 @@ fun Greeting(modifier: Modifier = Modifier) {
             pokemonList[selectedIndex] = updatedPokemon
             selectedPokemon.value = updatedPokemon
         }
+    }
+
+    val filteredPokemonList = pokemonList.filter { pokemon ->
+        pokemon.species.contains(
+            searchInput.value.trim(),
+            ignoreCase = true
+        )
     }
 
     Column(
@@ -287,7 +298,26 @@ fun Greeting(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        pokemonList.forEach { pokemon ->
+        Text("Search")
+
+        OutlinedTextField(
+            value = searchInput.value,
+            onValueChange = {
+                searchInput.value = it
+            },
+            label = {
+                Text("Search species")
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text("Showing ${filteredPokemonList.size} of ${pokemonList.size}")
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        filteredPokemonList.forEach { pokemon ->
             PokemonRow(
                 pokemon = pokemon,
                 onClick = {
