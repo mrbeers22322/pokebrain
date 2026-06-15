@@ -25,9 +25,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mattbeers.pokebrain.model.PokemonObservation
 import com.mattbeers.pokebrain.repository.PokemonRepository
-import com.mattbeers.pokebrain.ui.theme.PokeBrainTheme
 import com.mattbeers.pokebrain.ui.components.PokemonRow
 import com.mattbeers.pokebrain.ui.components.PokemonStatsSummary
+import com.mattbeers.pokebrain.ui.components.SelectedPokemonDetails
+import com.mattbeers.pokebrain.ui.theme.PokeBrainTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -115,16 +116,9 @@ fun PokeBrainScreen(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(16.dp))
 
         selectedPokemon.value?.let { pokemon ->
-            Text("Selected Pokémon")
-            Text("Species : ${pokemon.species}")
-            Text("CP : ${pokemon.cp}")
-            Text("Level : ${pokemon.level}")
-            Text("IVs : ${pokemon.attackIv}/${pokemon.defenseIv}/${pokemon.staminaIv}")
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Button(
-                onClick = {
+            SelectedPokemonDetails(
+                pokemon = pokemon,
+                onPowerUp = {
                     val selectedIndex = pokemonList.indexOf(pokemon)
 
                     if (selectedIndex != -1) {
@@ -137,15 +131,8 @@ fun PokeBrainScreen(modifier: Modifier = Modifier) {
                         selectedPokemon.value = updatedPokemon
                         statusMessage.value = "Powered up ${updatedPokemon.species} to CP ${updatedPokemon.cp}."
                     }
-                }
-            ) {
-                Text("Power Up Selected Pokémon")
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Button(
-                onClick = {
+                },
+                onToggleShiny = {
                     val updatedPokemon = pokemon.copy(
                         shiny = !pokemon.shiny
                     )
@@ -158,15 +145,8 @@ fun PokeBrainScreen(modifier: Modifier = Modifier) {
                         } else {
                             "Removed shiny tag from ${updatedPokemon.species}."
                         }
-                }
-            ) {
-                Text("Toggle Shiny")
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Button(
-                onClick = {
+                },
+                onToggleLucky = {
                     val updatedPokemon = pokemon.copy(
                         lucky = !pokemon.lucky
                     )
@@ -179,15 +159,8 @@ fun PokeBrainScreen(modifier: Modifier = Modifier) {
                         } else {
                             "Removed lucky tag from ${updatedPokemon.species}."
                         }
-                }
-            ) {
-                Text("Toggle Lucky")
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Button(
-                onClick = {
+                },
+                onToggleBuddy = {
                     val updatedPokemon = pokemon.copy(
                         buddy = !pokemon.buddy
                     )
@@ -200,24 +173,13 @@ fun PokeBrainScreen(modifier: Modifier = Modifier) {
                         } else {
                             "Removed buddy tag from ${updatedPokemon.species}."
                         }
-                }
-            ) {
-                Text("Toggle Buddy")
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Button(
-                onClick = {
+                },
+                onDelete = {
                     pokemonList.remove(pokemon)
                     selectedPokemon.value = null
                     statusMessage.value = "Deleted ${pokemon.species}."
                 }
-            ) {
-                Text("Delete Selected Pokémon")
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
+            )
         } ?: Text("Tap a Pokémon to view details")
 
         Spacer(modifier = Modifier.height(16.dp))
