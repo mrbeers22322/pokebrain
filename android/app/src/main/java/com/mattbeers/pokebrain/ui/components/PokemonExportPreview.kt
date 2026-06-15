@@ -3,6 +3,7 @@ package com.mattbeers.pokebrain.ui.components
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
@@ -55,6 +56,27 @@ fun PokemonExportPreview(
         }
     ) {
         Text("Copy CSV to Clipboard")
+    }
+
+    Spacer(modifier = Modifier.height(8.dp))
+
+    Button(
+        onClick = {
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/csv"
+                putExtra(Intent.EXTRA_SUBJECT, "PokeBrain Pokemon Export CSV")
+                putExtra(Intent.EXTRA_TEXT, fullCsvText)
+            }
+
+            context.startActivity(
+                Intent.createChooser(
+                    shareIntent,
+                    "Share PokeBrain CSV"
+                )
+            )
+        }
+    ) {
+        Text("Share CSV")
     }
 
     if (copyStatusMessage.value.isNotBlank()) {
