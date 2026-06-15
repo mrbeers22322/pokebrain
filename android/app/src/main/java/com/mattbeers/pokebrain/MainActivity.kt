@@ -7,13 +7,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,7 +28,7 @@ import com.mattbeers.pokebrain.ui.components.PokemonStatsSummary
 import com.mattbeers.pokebrain.ui.components.SelectedPokemonDetails
 import com.mattbeers.pokebrain.ui.theme.PokeBrainTheme
 import com.mattbeers.pokebrain.ui.components.ManualPokemonEntryForm
-
+import com.mattbeers.pokebrain.ui.components.PokemonSearchControls
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -225,27 +223,15 @@ fun PokeBrainScreen(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("Search")
-
-        OutlinedTextField(
-            value = searchInput.value,
-            onValueChange = {
-                searchInput.value = it
+        PokemonSearchControls(
+            searchText = searchInput.value,
+            onSearchTextChange = { newSearchText ->
+                searchInput.value = newSearchText
             },
-            label = {
-                Text("Search species")
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text("Showing ${filteredPokemonList.size} of ${pokemonList.size}")
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Button(
-            onClick = {
+            showingCount = filteredPokemonList.size,
+            totalCount = pokemonList.size,
+            sortByHighestCp = sortByHighestCp.value,
+            onToggleHighestCpSort = {
                 sortByHighestCp.value = !sortByHighestCp.value
 
                 statusMessage.value =
@@ -254,33 +240,12 @@ fun PokeBrainScreen(modifier: Modifier = Modifier) {
                     } else {
                         "CP sort cleared."
                     }
+            },
+            onClearSearch = {
+                searchInput.value = ""
+                statusMessage.value = "Search cleared."
             }
-        ) {
-            Text(
-                if (sortByHighestCp.value) {
-                    "Clear CP Sort"
-                } else {
-                    "Sort by Highest CP"
-                }
-            )
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        if (searchInput.value.isNotBlank()) {
-            Button(
-                onClick = {
-                    searchInput.value = ""
-                    statusMessage.value = "Search cleared."
-                }
-            ) {
-                Text("Clear Search")
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-        } else {
-            Spacer(modifier = Modifier.height(8.dp))
-        }
+        )
 
         if (filteredPokemonList.isEmpty()) {
             Text("No Pokémon match your search.")
