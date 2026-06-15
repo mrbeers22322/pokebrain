@@ -315,17 +315,36 @@ fun Greeting(modifier: Modifier = Modifier) {
 
         Text("Showing ${filteredPokemonList.size} of ${pokemonList.size}")
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-        filteredPokemonList.forEach { pokemon ->
-            PokemonRow(
-                pokemon = pokemon,
+        if (searchInput.value.isNotBlank()) {
+            Button(
                 onClick = {
-                    selectedPokemon.value = pokemon
+                    searchInput.value = ""
+                    statusMessage.value = "Search cleared."
                 }
-            )
+            ) {
+                Text("Clear Search")
+            }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+        } else {
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+
+        if (filteredPokemonList.isEmpty()) {
+            Text("No Pokémon match your search.")
+        } else {
+            filteredPokemonList.forEach { pokemon ->
+                PokemonRow(
+                    pokemon = pokemon,
+                    onClick = {
+                        selectedPokemon.value = pokemon
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+            }
         }
     }
 }
