@@ -103,6 +103,26 @@ fun Greeting(modifier: Modifier = Modifier) {
         pokemon.cp ?: 0
     }
 
+    val shinyCount = pokemonList.count { pokemon ->
+        pokemon.shiny
+    }
+
+    val luckyCount = pokemonList.count { pokemon ->
+        pokemon.lucky
+    }
+
+    val shadowCount = pokemonList.count { pokemon ->
+        pokemon.shadow
+    }
+
+    val legendaryCount = pokemonList.count { pokemon ->
+        pokemon.legendary
+    }
+
+    val buddyCount = pokemonList.count { pokemon ->
+        pokemon.buddy
+    }
+
     Column(
         modifier = modifier
             .padding(16.dp)
@@ -116,6 +136,15 @@ fun Greeting(modifier: Modifier = Modifier) {
         highestCpPokemon?.let { pokemon ->
             Text("Highest CP : ${pokemon.species} ${pokemon.cp}")
         }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text("Tag Stats")
+        Text("Shiny : $shinyCount")
+        Text("Lucky : $luckyCount")
+        Text("Shadow : $shadowCount")
+        Text("Legendary : $legendaryCount")
+        Text("Buddy : $buddyCount")
 
         Spacer(modifier = Modifier.height(16.dp))
 
