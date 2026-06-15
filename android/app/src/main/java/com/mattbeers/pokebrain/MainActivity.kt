@@ -5,18 +5,25 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.mattbeers.pokebrain.ui.theme.PokeBrainTheme
-import com.mattbeers.pokebrain.repository.PokemonRepository
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.ui.unit.dp
+import com.mattbeers.pokebrain.model.PokemonObservation
+import com.mattbeers.pokebrain.repository.PokemonRepository
+import com.mattbeers.pokebrain.ui.theme.PokeBrainTheme
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,13 +42,41 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(modifier: Modifier = Modifier) {
-    val pokemonList = PokemonRepository.pokemonList
+    val pokemonList = remember {
+        mutableStateListOf<PokemonObservation>().apply {
+            addAll(PokemonRepository.pokemonList)
+        }
+    }
 
     Column(
         modifier = modifier
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         Text("PokeBrain")
         Text("Pokemon Count : ${pokemonList.size}")
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = {
+                pokemonList.add(
+                    PokemonObservation(
+                        pokemonUuid = "dialga-test-${pokemonList.size + 1}",
+                        species = "Dialga",
+                        cp = 2988,
+                        level = 25.0,
+                        attackIv = 13,
+                        defenseIv = 15,
+                        staminaIv = 8,
+                        shadow = true,
+                        legendary = true
+                    )
+                )
+            }
+        ) {
+            Text("Add Test Pokémon")
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
