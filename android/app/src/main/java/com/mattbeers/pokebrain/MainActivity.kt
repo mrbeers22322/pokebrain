@@ -69,6 +69,15 @@ fun Greeting(modifier: Modifier = Modifier) {
         mutableStateOf("Enter a species and CP to add a Pokémon.")
     }
 
+    fun updateSelectedPokemon(updatedPokemon: PokemonObservation) {
+        val selectedIndex = pokemonList.indexOf(selectedPokemon.value)
+
+        if (selectedIndex != -1) {
+            pokemonList[selectedIndex] = updatedPokemon
+            selectedPokemon.value = updatedPokemon
+        }
+    }
+
     Column(
         modifier = modifier
             .padding(16.dp)
@@ -105,6 +114,69 @@ fun Greeting(modifier: Modifier = Modifier) {
                 }
             ) {
                 Text("Power Up Selected Pokémon")
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(
+                onClick = {
+                    val updatedPokemon = pokemon.copy(
+                        shiny = !pokemon.shiny
+                    )
+
+                    updateSelectedPokemon(updatedPokemon)
+
+                    statusMessage.value =
+                        if (updatedPokemon.shiny) {
+                            "Marked ${updatedPokemon.species} as shiny."
+                        } else {
+                            "Removed shiny tag from ${updatedPokemon.species}."
+                        }
+                }
+            ) {
+                Text("Toggle Shiny")
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(
+                onClick = {
+                    val updatedPokemon = pokemon.copy(
+                        lucky = !pokemon.lucky
+                    )
+
+                    updateSelectedPokemon(updatedPokemon)
+
+                    statusMessage.value =
+                        if (updatedPokemon.lucky) {
+                            "Marked ${updatedPokemon.species} as lucky."
+                        } else {
+                            "Removed lucky tag from ${updatedPokemon.species}."
+                        }
+                }
+            ) {
+                Text("Toggle Lucky")
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(
+                onClick = {
+                    val updatedPokemon = pokemon.copy(
+                        buddy = !pokemon.buddy
+                    )
+
+                    updateSelectedPokemon(updatedPokemon)
+
+                    statusMessage.value =
+                        if (updatedPokemon.buddy) {
+                            "Marked ${updatedPokemon.species} as buddy."
+                        } else {
+                            "Removed buddy tag from ${updatedPokemon.species}."
+                        }
+                }
+            ) {
+                Text("Toggle Buddy")
             }
 
             Spacer(modifier = Modifier.height(8.dp))
