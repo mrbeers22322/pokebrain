@@ -9,6 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.mattbeers.pokebrain.model.PokemonObservation
+import com.mattbeers.pokebrain.util.formatPokemonIvPercent
+import com.mattbeers.pokebrain.util.formatPokemonIvs
+import com.mattbeers.pokebrain.util.formatPokemonLevel
 
 @Composable
 fun SelectedPokemonDetails(
@@ -19,24 +22,18 @@ fun SelectedPokemonDetails(
     onToggleBuddy: () -> Unit,
     onDelete: () -> Unit
 ) {
+    val levelText = formatPokemonLevel(pokemon)
+    val ivText = formatPokemonIvs(pokemon)
+    val ivPercentText = formatPokemonIvPercent(pokemon)
+
     Column {
         Text("Selected Pokémon")
         Text("Species : ${pokemon.species}")
         Text("CP : ${pokemon.cp}")
-        val ivText = if (
-            pokemon.attackIv == null ||
-            pokemon.defenseIv == null ||
-            pokemon.staminaIv == null
-        ) {
-            "Unknown"
-        } else {
-            "${pokemon.attackIv}/${pokemon.defenseIv}/${pokemon.staminaIv}"
-        }
-
-        val levelText = pokemon.level?.toString() ?: "Unknown"
-
         Text("Level : $levelText")
         Text("IVs : $ivText")
+        Text("IV % : $ivPercentText")
+
         Spacer(modifier = Modifier.height(8.dp))
 
         Button(
