@@ -23,12 +23,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mattbeers.pokebrain.model.PokemonObservation
 import com.mattbeers.pokebrain.repository.PokemonRepository
-import com.mattbeers.pokebrain.ui.components.PokemonRow
 import com.mattbeers.pokebrain.ui.components.PokemonStatsSummary
 import com.mattbeers.pokebrain.ui.components.SelectedPokemonDetails
 import com.mattbeers.pokebrain.ui.theme.PokeBrainTheme
 import com.mattbeers.pokebrain.ui.components.ManualPokemonEntryForm
 import com.mattbeers.pokebrain.ui.components.PokemonSearchControls
+import com.mattbeers.pokebrain.ui.components.PokemonListSection
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -247,20 +247,12 @@ fun PokeBrainScreen(modifier: Modifier = Modifier) {
             }
         )
 
-        if (filteredPokemonList.isEmpty()) {
-            Text("No Pokémon match your search.")
-        } else {
-            filteredPokemonList.forEach { pokemon ->
-                PokemonRow(
-                    pokemon = pokemon,
-                    onClick = {
-                        selectedPokemon.value = pokemon
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
+        PokemonListSection(
+            pokemonList = filteredPokemonList,
+            onPokemonSelected = { pokemon ->
+                selectedPokemon.value = pokemon
             }
-        }
+        )
     }
 }
 
