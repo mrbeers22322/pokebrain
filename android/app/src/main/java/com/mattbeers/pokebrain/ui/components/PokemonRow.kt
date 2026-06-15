@@ -27,7 +27,19 @@ fun PokemonRow(
             modifier = Modifier.padding(12.dp)
         ) {
             Text("${pokemon.species}  CP ${pokemon.cp}")
-            Text("Level ${pokemon.level}  IVs ${pokemon.attackIv}/${pokemon.defenseIv}/${pokemon.staminaIv}")
+            val ivText = if (
+                pokemon.attackIv == null ||
+                pokemon.defenseIv == null ||
+                pokemon.staminaIv == null
+            ) {
+                "Unknown"
+            } else {
+                "${pokemon.attackIv}/${pokemon.defenseIv}/${pokemon.staminaIv}"
+            }
+
+            val levelText = pokemon.level?.toString() ?: "Unknown"
+
+            Text("Level $levelText  IVs $ivText")
 
             val tags = listOfNotNull(
                 if (pokemon.shiny) "Shiny" else null,

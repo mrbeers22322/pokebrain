@@ -23,9 +23,20 @@ fun SelectedPokemonDetails(
         Text("Selected Pokémon")
         Text("Species : ${pokemon.species}")
         Text("CP : ${pokemon.cp}")
-        Text("Level : ${pokemon.level}")
-        Text("IVs : ${pokemon.attackIv}/${pokemon.defenseIv}/${pokemon.staminaIv}")
+        val ivText = if (
+            pokemon.attackIv == null ||
+            pokemon.defenseIv == null ||
+            pokemon.staminaIv == null
+        ) {
+            "Unknown"
+        } else {
+            "${pokemon.attackIv}/${pokemon.defenseIv}/${pokemon.staminaIv}"
+        }
 
+        val levelText = pokemon.level?.toString() ?: "Unknown"
+
+        Text("Level : $levelText")
+        Text("IVs : $ivText")
         Spacer(modifier = Modifier.height(8.dp))
 
         Button(
