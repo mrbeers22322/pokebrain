@@ -89,6 +89,20 @@ fun Greeting(modifier: Modifier = Modifier) {
         )
     }
 
+    val totalCp = pokemonList.sumOf { pokemon ->
+        pokemon.cp ?: 0
+    }
+
+    val averageCp = if (pokemonList.isNotEmpty()) {
+        totalCp / pokemonList.size
+    } else {
+        0
+    }
+
+    val highestCpPokemon = pokemonList.maxByOrNull { pokemon ->
+        pokemon.cp ?: 0
+    }
+
     Column(
         modifier = modifier
             .padding(16.dp)
@@ -96,6 +110,12 @@ fun Greeting(modifier: Modifier = Modifier) {
     ) {
         Text("PokeBrain")
         Text("Pokemon Count : ${pokemonList.size}")
+        Text("Total CP : $totalCp")
+        Text("Average CP : $averageCp")
+
+        highestCpPokemon?.let { pokemon ->
+            Text("Highest CP : ${pokemon.species} ${pokemon.cp}")
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
