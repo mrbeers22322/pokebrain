@@ -69,6 +69,10 @@ fun Greeting(modifier: Modifier = Modifier) {
         mutableStateOf("")
     }
 
+    val sortByHighestCp = remember {
+        mutableStateOf(false)
+    }
+
     val statusMessage = remember {
         mutableStateOf("Enter a species and CP to add a Pokémon.")
     }
@@ -82,11 +86,19 @@ fun Greeting(modifier: Modifier = Modifier) {
         }
     }
 
-    val filteredPokemonList = pokemonList.filter { pokemon ->
+    val searchedPokemonList = pokemonList.filter { pokemon ->
         pokemon.species.contains(
             searchInput.value.trim(),
             ignoreCase = true
         )
+    }
+
+    val filteredPokemonList = if (sortByHighestCp.value) {
+        searchedPokemonList.sortedByDescending { pokemon ->
+            pokemon.cp ?: 0
+        }
+    } else {
+        searchedPokemonList
     }
 
     val totalCp = pokemonList.sumOf { pokemon ->
@@ -363,6 +375,29 @@ fun Greeting(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(8.dp))
 
         Text("Showing ${filteredPokemonList.size} of ${pokemonList.size}")
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
+            onClick = {
+                sortByHighestCp.value = !sortByHighestCp.value
+
+                statusMessage.value =
+                    if (sortByHighestCp.value) {
+                        "Sorted by highest CP."
+                    } else {
+                        "CP sort cleared."
+                    }
+            }
+        ) {
+            Text(
+                if (sortByHighestCp.value) {
+                    "Clear CP Sort"
+                } else {
+                    "Sort by Highest CP"
+                }
+            )
+        }
 
         Spacer(modifier = Modifier.height(8.dp))
 
