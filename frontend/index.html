@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#08142f">
+  <title>PokeBrain — Pokémon command center</title>
+  <link rel="icon" href="assets/pokebrain-icon.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#top" aria-label="PokeBrain home">
+        <img src="assets/pokebrain-icon.png" alt="">
+        <span><strong>PokeBrain</strong><small>your collection, clearer</small></span>
+      </a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a class="nav-link active" href="#top"><span>⌂</span>Overview</a>
+        <a class="nav-link" href="#inventory"><span>◈</span>Inventory</a>
+        <a class="nav-link" href="#projects"><span>✦</span>Projects</a>
+        <a class="nav-link" href="#imports"><span>↥</span>Imports</a>
+      </nav>
+      <div class="sidebar-footer"><span class="status-dot"></span>Local workspace<br><small>Ready for your first import</small></div>
+    </aside>
+
+    <main class="main" id="top">
+      <header class="topbar">
+        <div><p class="eyebrow">TRAINER COMMAND CENTER</p><h1>Good evening, trainer.</h1></div>
+        <button class="avatar" aria-label="Open profile">MB</button>
+      </header>
+
+      <section class="hero-card">
+        <div><p class="eyebrow">THE BIG PICTURE</p><h2>Make every Pokémon count.</h2><p class="hero-copy">PokeBrain turns scans and exports into decisions you can trust—keep, power up, trade, or transfer.</p><a class="primary-button" href="#imports">Import your collection <span>→</span></a></div>
+        <div class="hero-orbit" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><img src="assets/pokebrain-icon.png" alt=""></div>
+      </section>
+
+      <section class="metric-grid" aria-label="Inventory summary">
+        <article class="metric-card"><span class="metric-icon blue">◈</span><div><strong>3</strong><span>Pokémon tracked</span></div></article>
+        <article class="metric-card"><span class="metric-icon gold">★</span><div><strong>1</strong><span>Legendary candidates</span></div></article>
+        <article class="metric-card"><span class="metric-icon pink">◆</span><div><strong>2</strong><span>Buddy projects</span></div></article>
+        <article class="metric-card"><span class="metric-icon green">↥</span><div><strong>0</strong><span>Unreviewed imports</span></div></article>
+      </section>
+
+      <section class="content-section" id="inventory">
+        <div class="section-heading"><div><p class="eyebrow">COLLECTION</p><h2>Your Pokémon</h2></div><button class="ghost-button" id="sort-button">Sort: CP ↓</button></div>
+        <div class="toolbar"><label class="search"><span>⌕</span><input id="search" type="search" placeholder="Search species or nickname" autocomplete="off"></label><div class="filter-pills" role="group" aria-label="Inventory filters"><button class="filter active" data-filter="all">All</button><button class="filter" data-filter="shiny">Shiny</button><button class="filter" data-filter="legendary">Legendary</button></div></div>
+        <div class="pokemon-grid" id="pokemon-grid"></div>
+      </section>
+
+      <section class="split-grid" id="projects">
+        <article class="panel"><div class="section-heading compact"><div><p class="eyebrow">NEXT UP</p><h2>Projects</h2></div><button class="icon-button" aria-label="Add project">+</button></div><div class="project"><span class="project-ring"></span><div><strong>Build a raid-ready Groudon</strong><small>Power up · 1,200 candy remaining</small></div><span class="project-arrow">→</span></div><div class="project"><span class="project-ring purple"></span><div><strong>Review transfer candidates</strong><small>3 records need your decision</small></div><span class="project-arrow">→</span></div></article>
+        <article class="panel import-panel" id="imports"><div><p class="eyebrow">START HERE</p><h2>Bring in your collection</h2><p>CSV, screenshots, and OCR imports will appear here with duplicate review before anything changes your canonical inventory.</p><button class="secondary-button">Choose an import file</button></div><span class="upload-mark">↥</span></article>
+      </section>
+      <footer class="footer">PokeBrain <span>•</span> local-first Pokémon intelligence</footer>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

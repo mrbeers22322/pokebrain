@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import com.mattbeers.pokebrain.ui.screens.PokeBrainScreen
 import com.mattbeers.pokebrain.ui.theme.PokeBrainTheme
 
@@ -19,7 +20,8 @@ class MainActivity : ComponentActivity() {
             PokeBrainTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     PokeBrainScreen(
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding),
+                        storageContext = LocalContext.current
                     )
                 }
             }

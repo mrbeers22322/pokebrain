@@ -1,5 +1,6 @@
 package com.mattbeers.pokebrain.ui.screens
 
+import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -17,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mattbeers.pokebrain.model.PokemonObservation
 import com.mattbeers.pokebrain.repository.PokemonRepository
+import com.mattbeers.pokebrain.storage.PokemonStorage
 import com.mattbeers.pokebrain.ui.components.ManualPokemonEntryForm
 import com.mattbeers.pokebrain.ui.components.PokemonListSection
 import com.mattbeers.pokebrain.ui.components.PokemonSearchControls
@@ -26,10 +28,20 @@ import com.mattbeers.pokebrain.ui.theme.PokeBrainTheme
 import com.mattbeers.pokebrain.ui.components.PokemonExportPreview
 
 @Composable
-fun PokeBrainScreen(modifier: Modifier = Modifier) {
+fun PokeBrainScreen(
+    modifier: Modifier = Modifier,
+    storageContext: Context? = null
+) {
+    val pokemonStorage = remember(storageContext) {
+        storageContext?.let(::PokemonStorage)
+    }
+
     val pokemonList = remember {
         mutableStateListOf<PokemonObservation>().apply {
-            addAll(PokemonRepository.pokemonList)
+            addAll(
+                pokemonStorage?.loadInventory()
+                    ?: PokemonRepository.pokemonList
+            )
         }
     }
 
@@ -196,6 +208,18 @@ fun PokeBrainScreen(modifier: Modifier = Modifier) {
         Text(statusMessage.value)
 
         Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = {
+                pokemonStorage?.saveInventory(pokemonList)
+                statusMessage.value = "Saved ${pokemonList.size} Pokémon to this device."
+            },
+            enabled = pokemonStorage != null
+        ) {
+            Text("Save Inventory")
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         Button(
             onClick = {

@@ -1,38 +1,41 @@
-# Database Schema Draft
+# PokeBrain database
 
-This schema is intentionally broad because PokeBrain needs to support AI recommendations, user preferences, team building, trade intelligence, and audit history.
+PokeBrain uses a local-first SQLite model. Every application connection must enable
+`PRAGMA foreign_keys = ON`.
 
-## Core Tables
+## Data layers
 
-### users
-Trainer/account owner.
+- `pokemon_inventory` is the current canonical record for each known Pokémon.
+- `source_batches` records where an observation came from: manual entry, CSV, JSON,
+  screenshot, video, OCR, or API.
+- `pokemon_observations` is immutable evidence from each import or scan. It may be
+  unlinked until duplicate matching is reviewed.
+- `observation_fields` retains raw extracted text, normalized values, confidence,
+  OCR region data, and user corrections.
+- `pokemon_events` records state transitions such as transfer, trade, CP, IV, tag,
+  nickname, and move changes. Canonical records are never deleted for ordinary
+  lifecycle changes.
 
-### player_preferences
-Controls personalized recommendations.
+## Inventory and history
 
-### pokemon_inventory
-One row per actual Pokémon.
+`pokemon_inventory` contains the latest known state. A transferred or traded
+Pokémon remains in the table with a lifecycle status so historical scans cannot
+resurrect it accidentally. `pokemon_events` and source records provide an audit
+trail for every change.
 
-### field_confidence
-Tracks confidence per field, not just per Pokémon.
+`pokemon_moves` and `candy_inventory` are current snapshots. `candy_events`
+records observed, earned, spent, transferred, and corrected changes over time.
 
-### sources
-Tracks imports/screenshots/videos.
+## Duplicate handling
 
-### candy_inventory
-One row per candy family per user.
+`duplicate_candidates` stores possible matches and the evidence score. Matching is
+never destructive: the system can mark candidates as the same, different, merged,
+or ignored after review. A fingerprint is only an indexable hint, not a unique key,
+because two Pokémon can legitimately share the same visible values.
 
-### projects
-Tracks current Pokémon goals.
+## Validation rules
 
-### trade_intelligence
-Tracks normal trades and mirror trades.
-
-### ai_questions
-AI/user two-way questions.
-
-### ai_recommendations
-Recommendation history.
-
-### ai_site_recommendations
-AI product-manager table for site feature suggestions.
+Foreign keys, uniqueness constraints, indexes, and checks protect user ownership,
+IV ranges, boolean values, lifecycle states, confidence scores, and non-negative
+resources. Import and OCR code must write observations first, then update the
+canonical record only after matching and validation.
